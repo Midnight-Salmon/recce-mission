@@ -35,7 +35,7 @@ enum PortState {
 };
 
 struct ScanResult {
-  char address[INET_ADDRSTRLEN];
+  char address[INET6_ADDRSTRLEN];
   enum PortState ports[MAX_PORTS_COUNT];
 };
 
