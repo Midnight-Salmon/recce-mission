@@ -22,7 +22,7 @@
 #include <time.h>
 #include <pthread.h>
 
-#define VERSION_MAJOR 0
+#define VERSION_MAJOR 1
 #define VERSION_MINOR 1 
 #define MAX_PORTS_COUNT 65536
 #define MAX_THREADS 64
