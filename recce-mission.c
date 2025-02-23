@@ -110,7 +110,7 @@ static void *scan_port(void *a) {
     struct sockaddr_in new_addr4;
     new_addr4 = *((struct sockaddr_in *)(target_info->ai_addr));
     new_addr4.sin_port = htons(port);
-    new_addr = (struct sockaddr *)&new_addr4;
+    new_addr = &new_addr4;
   }
 
   else {
