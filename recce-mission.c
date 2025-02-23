@@ -103,11 +103,22 @@ static void *scan_port(void *a) {
   unsigned short port = args->port;
   enum PortState *destination = args->destination;
 
-  /* Copy sockaddr, cast to IPV4 format to set port. */
+  /* Copy address to correct format, set port. */
+  
+  void *new_addr = NULL;
+  if (target_info->ai_family == AF_INET) {
+    struct sockaddr_in new_addr4;
+    new_addr4 = *((struct sockaddr_in *)(target_info->ai_addr));
+    new_addr4.sin_port = htons(port);
+    new_addr = (struct sockaddr *)&new_addr4;
+  }
 
-  struct sockaddr new_addr = *(target_info->ai_addr);
-  struct sockaddr_in *new_addr_v4 = (struct sockaddr_in *)&new_addr;
-  new_addr_v4->sin_port = htons(port);
+  else {
+    struct sockaddr_in6 new_addr6;
+    new_addr6 = *((struct sockaddr_in6 *)(target_info->ai_addr));
+    new_addr6.sin6_port = htons(port);
+    new_addr = &new_addr6;
+  }
 
   /* Init socket.
    * Enable failing connection on ICMP error to detect filtered ports. */
@@ -136,7 +147,7 @@ static void *scan_port(void *a) {
 
   /* Attempt connection. */
 
-  int r = connect(scan_socket, &new_addr, sizeof(new_addr));
+  int r = connect(scan_socket, new_addr, target_info->ai_addrlen);
 
   /* Determine state of port based on result of connection attempt. */
 
